@@ -2,6 +2,8 @@
 
 Detect, ocrize and parse (client or server side) the Machine Readable Zone of passports and other documents
 
+Using [mrz-detection](https://github.com/image-js/mrz-detection) written for NodeJS by [Daniel Kostro](https://github.com/stropitek) and [Michaël Zasso](https://github.com/targos).
+
 # LICENSE
 ```
 Copyright (c) 2018 ALSENET SA
