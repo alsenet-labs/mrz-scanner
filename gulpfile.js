@@ -17,6 +17,7 @@
 *
 */
 
+var path = require('path');
 var gulp = require('gulp');
 var watchify = require('watchify');
 var browserify = require('browserify');
@@ -33,6 +34,7 @@ var extend = require('extend');
 var browserSync = require('browser-sync');
 var es = require('event-stream');
 var htmlreplace = require('gulp-html-replace');
+var insert = require('gulp-insert');
 
 var baseDir='build';
 var dist=false;
@@ -70,7 +72,26 @@ gulp.task('dist-env', function(callback){
   callback();
 });
 
-gulp.task('scripts',function(){
+gulp.task('static-fs', function(callback) {
+  var spawn = require('child_process').spawn;
+  var job=spawn('node', ['./static-fs-make.js'], { stdio: 'inherit' });
+
+  job.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+
+  job.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`);
+  });
+
+  job.on('exit', (code) => {
+    console.log(`child process exited with code ${code}`);
+    cb(code);
+  });
+
+});
+
+gulp.task('scripts', function(){
   return processScripts({
     watchify: false,
     minify: dist,
@@ -80,11 +101,23 @@ gulp.task('scripts',function(){
 
 gulp.task('copy',function(){
   return copy({
-    src: './node_modules/mrz-detection/models/**',
-    dest: './'+baseDir+'/models/'
-  }, {
     src: './src/index.html',
     dest: './'+baseDir+'/'
+  });
+});
+
+gulp.task('wrap', ['scripts'], function(){
+  var inFile=path.join(baseDir,'js/mrz-worker.bundle'+(dist?'-min':'')+'.js');
+  return gulp.src(inFile)
+  .pipe(insert.wrap('function mrz_worker(){\n','\n}'))
+  .pipe(rename({
+    dirname: '',
+    extname: '-wrapped.js'
+  }))
+  .pipe(debug({title: ' writing', showCount: false}))
+  .pipe(gulp.dest(baseDir+'/js'))
+  .on('error',function(err){
+    log.info(err);
   });
 });
 
@@ -93,7 +126,10 @@ gulp.task('htmlreplace', ['copy'], function(){
     .pipe(htmlreplace({
       js: {
         src: null,
-        tpl: '<script src="js/demo.bundle'+(dist?'-min':'')+'.js" data-mrz-worker="js/mrz-worker.bundle'+(dist?'-min':'')+'.js"></script>'
+        tpl: [
+          '<script src="js/mrz-worker.bundle'+(dist?'-min':'')+'-wrapped.js"></script>',
+          '<script src="js/demo.bundle'+(dist?'-min':'')+'.js"></script>'
+        ].join('\n')
       }
     }))
     .pipe(gulp.dest('./'+baseDir+'/'));
@@ -101,6 +137,7 @@ gulp.task('htmlreplace', ['copy'], function(){
 
 gulp.task('build', [
   'scripts',
+  'wrap',
   'copy',
   'htmlreplace'
 ]);

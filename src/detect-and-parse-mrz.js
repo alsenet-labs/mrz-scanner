@@ -19,54 +19,57 @@
 
 'use strict';
 
+
 const IJS = require('image-js').Image;
 
-const { getMrz, readMrz } = require('mrz-detection');
 
 const { parse } = require('./mrz-relax');
 
-module.exports = async function detectAndParseMrz(image, result, progress) {
-  result = result || {};
+module.exports = function(options) {
+  const { getMrz, readMrz } = require('mrz-detection')({fs: options.fs});
+  return async function detectAndParseMrz(image, result, progress) {
+    result = result || {};
 
-  console.time('detecting');
-  if (progress) {
-    progress('detecting');
-  }
-  result.detected = {};
-  try {
-    await getMrz(await IJS.load(image), {
-      debug: true,
-      out: result.detected
-    });
-  } catch (e) {
-    result.error = e;
-  }
-  console.timeEnd('detecting');
-  if (result.error) return result;
+    if (progress) {
+      console.time('detecting');
+      progress('detecting');
+    }
+    result.detected = {};
+    try {
+      await getMrz(await IJS.load(image), {
+        debug: true,
+        out: result.detected
+      });
+    } catch (e) {
+      result.error = e;
+    }
+    if (progress) console.timeEnd('detecting');
+    if (result.error) return result;
 
-  console.time('ocrizing');
-  if (progress) {
-    progress('ocrizing');
-  }
-  try {
-    result.ocrized = await readMrz(await IJS.load(result.detected.crop.toDataURL()), {
-      debug: true
-    });
-  } catch (e) {
-    result.error = e;
-  }
-  console.timeEnd('ocrizing');
-  if (result.error) return result;
+    if (progress) {
+      console.time('ocrizing');
+      progress('ocrizing');
+    }
+    try {
+      result.ocrized = await readMrz(await IJS.load(result.detected.crop.toDataURL()), {
+        debug: true
+      });
+    } catch (e) {
+      result.error = e;
+    }
+    if (progress) console.timeEnd('ocrizing');
+    if (result.error) return result;
 
-  console.time('parsing');
-  if (progress) {
-    progress('parsing');
+    if (progress) {
+      console.time('parsing');
+      progress('parsing');
+    }
+    try {
+      result.parsed = parse(result.ocrized);
+    } catch (e) {
+      result.error = e;
+    }
+    if (progress) console.timeEnd('parsing');
+    return result;
   }
-  try {
-    result.parsed = parse(result.ocrized);
-  } catch (e) {
-    result.error = e;
-  }
-  console.timeEnd('parsing');
-  return result;
 };

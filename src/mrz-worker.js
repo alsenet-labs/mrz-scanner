@@ -21,7 +21,14 @@
 */
 
 'use strict';
-var detectAndParseMrz = require('./detect-and-parse-mrz.js');
+const fs = require('../static-fs.js');
+var _readFile=fs.readFile;
+fs.readFile=function(url,encoding){
+  var dirname ='/node_modules/mrz-detection';
+  url = url.replace(dirname, '');
+  return _readFile(url,encoding);
+}
+var detectAndParseMrz = require('./detect-and-parse-mrz.js')({fs: fs});
 var extend = require('extend');
 
 self.config = {
@@ -100,3 +107,5 @@ self.addEventListener('message', function (e) {
       break;
   }
 }, false);
+
+

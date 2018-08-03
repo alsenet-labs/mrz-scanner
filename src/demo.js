@@ -24,7 +24,12 @@ var $ = require('jquery');
 var worker;
 
 function initWorker() {
-  var worker = new Worker($('script[data-mrz-worker]').data('mrz-worker'));
+	var blob = new Blob(
+    [mrz_worker.toString().replace(/^function .+\{?|\}$/g, '')],
+    { type:'text/javascript' }
+  );
+	var objectURL = URL.createObjectURL(blob);
+	var worker = new Worker(objectURL);
 
   worker.addEventListener('error',function(e){
     console.log(e);
@@ -53,6 +58,7 @@ function initWorker() {
         break;
 
       default:
+        console.log(data);
         break;
     }
   }, false);
@@ -79,10 +85,10 @@ $(document).ready(function () {
   }
   $('#photo').on('change', function (e) {
     $('#detected, #parsed').empty();
-    $('#image').attr('src', '');
+//    $('#image').attr('src', '');
     var reader = new FileReader();
     reader.onload = function (e) {
-      $('#image').attr('src', e.target.result);
+//      $('#image').attr('src', e.target.result);
       $('.progress').addClass('visible');
       $('.progress-text').text('Processing...');
       worker.postMessage({
@@ -127,10 +133,10 @@ function showResult(result) {
     if (result.parsed.valid) {
       html = [
         '<pre>',
-        escape(info),
+        escape(JSON.stringify(result.parsed.fields, false, 4)),
         '</pre>',
         '<pre>',
-        escape(JSON.stringify(result.parsed.fields, false, 4)),
+        escape(info),
         '</pre>'
       ];
     } else {
@@ -158,7 +164,7 @@ function showResult(result) {
     }
   }
   $('#parsed').html(html.join('\n'));
-  showImages(result.images);
+  showImages(['painted']/*result.images*/);
 }
 
 function showImages(images, callback, index) {

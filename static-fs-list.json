@@ -1,0 +1,8 @@
+[
+  {"baseDir": "dist", "name": "models/ESC-v2.svm.descriptors", "encoding": "binary"},
+  {"baseDir": "dist", "name": "models/ESC-v2.svm.model", "encoding": "utf-8"}
+
+]
+
+
+
