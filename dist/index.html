@@ -2,8 +2,10 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
 
-    <script src="js/demo.bundle-min.js" data-mrz-worker="js/mrz-worker.bundle-min.js"></script>
+    <script src="js/mrz-worker.bundle-min-wrapped.js"></script>
+<script src="js/demo.bundle-min.js"></script>
     <style>
 
       html, body {
@@ -124,9 +126,9 @@
       <div class="input">
         <input type="file" id="photo" name="photo" accept="image/png, image/jpeg"/>
       </div>
-      <div class="image">
+      <!--div class="image">
         <img id="image"></img>
-      </div>
+      </div-->
       <div id="parsed"></div>
       <div id="detected"></div>
     </div>
