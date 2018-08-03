@@ -25,8 +25,25 @@ Author(s):
 ```
 # Quickstart
 
+## Web
 ```
 git clone https://github.com/alsenet-labs/mrz-scanner
 cd mrz-scanner
 npm start
 ```
+
+## Command line
+```
+git clone https://github.com/alsenet-labs/mrz-scanner
+cd mrz-scanner
+npm install .
+mrz2json /path/to/passport.jpg /path/to/passport.png
+```
+
+or
+
+```
+npm install mrz-scanner
+mrz2json <jpg_or_png> [...]
+```
+
