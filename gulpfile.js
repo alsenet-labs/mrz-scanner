@@ -73,25 +73,13 @@ gulp.task('dist-env', function(callback){
 });
 
 gulp.task('static-fs', function(callback) {
-  var spawn = require('child_process').spawn;
-  var job=spawn('node', ['./static-fs-make.js'], { stdio: 'inherit' });
-
-  job.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
+  var exec = require('child_process').exec;
+  var job=exec('node ./static-fs-make.js', function(err, stdout, stderr){
+    callback(err);
   });
-
-  job.stderr.on('data', (data) => {
-    console.log(`stderr: ${data}`);
-  });
-
-  job.on('exit', (code) => {
-    console.log(`child process exited with code ${code}`);
-    cb(code);
-  });
-
 });
 
-gulp.task('scripts', function(){
+gulp.task('scripts', ['static-fs'], function(){
   return processScripts({
     watchify: false,
     minify: dist,
