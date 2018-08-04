@@ -54,6 +54,7 @@ or
 npm install -g mrz-scanner
 mrz2json <jpg_or_png_or_tiff> [...]
 ```
+On success the result will be stored along the original image in a file suffixed by ".mrz.json"
 
 ## Supported image formats
 
