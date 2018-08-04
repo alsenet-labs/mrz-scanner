@@ -1,6 +1,6 @@
 {
   "name": "mrz-scanner",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Detect, ocrize and parse (client or server side or from command line) the Machine Readable Zone of passports and other documents",
   "bin": {
     "mrz2json": "src/mrz2json.js"
@@ -57,10 +57,9 @@
   "dependencies": {
     "canvas": "^2.0.0-alpha.13",
     "extend": "^3.0.1",
+    "fs-extra": "^7.0.0",
     "jquery": "^3.3.1",
     "mrz-detection": "git+https://github.com/alsenet-labs/mrz-detection.git#a91683deab9f587c8cdcad3a222938a9952cae16",
-    "q": "^1.5.1",
-    "request": "^2.87.0",
-    "request-promise": "^4.2.2"
+    "q": "^1.5.1"
   }
 }
