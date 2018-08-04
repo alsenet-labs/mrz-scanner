@@ -1,6 +1,6 @@
 # mrz-scanner
 
-Detect, ocrize and parse (client or server side) the Machine Readable Zone of passports and other documents
+Detect, ocrize and parse (client or server side, or from command line) the Machine Readable Zone of passports and other documents
 
 Using [mrz-detection](https://github.com/image-js/mrz-detection) written for NodeJS by [Daniel Kostro](https://github.com/stropitek) and [Michaël Zasso](https://github.com/targos).
 
@@ -26,24 +26,40 @@ Author(s):
 # Quickstart
 
 ## Web
+You can build the scripts, start a web server and open a browser, with eg:
 ```
 git clone https://github.com/alsenet-labs/mrz-scanner
 cd mrz-scanner
 npm start
 ```
-
+The code is now "same-origin friendly". That means it can be run in the browser from the filesystem (no web server required), with eg:
+```
+git clone https://github.com/alsenet-labs/mrz-scanner
+cd mrz-scanner
+npm install
+gulp dist
+xdg-open dist/index.html
+```
 ## Command line
 ```
 git clone https://github.com/alsenet-labs/mrz-scanner
 cd mrz-scanner
 npm install .
-mrz2json /path/to/passport.jpg /path/to/passport.png
+mrz2json <png_or_jpg_or_tiff> [...]
 ```
 
 or
 
 ```
 npm install -g mrz-scanner
-mrz2json <jpg_or_png> [...]
+mrz2json <jpg_or_png_or_tiff> [...]
 ```
 
+## Supported image formats
+
+Supported image formats
+The following formats can be loaded by image-js:
+
+* PNG (8 or 16 bits, color or greyscale, with or without alpha)
+* JPEG
+* TIFF (8 or 16 bits, greyscale)
