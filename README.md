@@ -43,7 +43,7 @@ mrz2json /path/to/passport.jpg /path/to/passport.png
 or
 
 ```
-npm install mrz-scanner
+npm install -g mrz-scanner
 mrz2json <jpg_or_png> [...]
 ```
 
