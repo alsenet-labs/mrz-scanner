@@ -23,14 +23,33 @@
 "use strict";
 
 var fs=require('fs-extra');
+var path=require('path');
 var detectAndParseMrz=require('./detect-and-parse-mrz.js')({fs: fs});
 var exitCode=0
 var Q=require('q');
 
-process.argv.splice(2).reduce(function(promise,filename){
+var program=require('commander');
+
+program.version('1.2.0')
+.usage('[options] <file...>')
+.option('-d, --dest-dir <path>')
+
+program.parse(process.argv);
+
+if (program.args.length<1) {
+  program.outputHelp();
+  process.exit(1);
+}
+
+program.args.reduce(function(promise,filename){
   return promise.then(function(){
     console.error('\nProcessing',filename);
-    var outFile=filename+'.mrz.json';
+    var outFile;
+    if(program.destDir) {
+      outFile=path.join(program.destDir,path.basename(filename))+'.mrz.json';
+    } else {
+      outFile=filename+'.mrz.json';
+    }
     console.time(outFile);
     return detectAndParseMrz(filename)
     .then(function(result){
