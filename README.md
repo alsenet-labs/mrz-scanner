@@ -45,16 +45,16 @@ xdg-open dist/index.html
 git clone https://github.com/alsenet-labs/mrz-scanner
 cd mrz-scanner
 npm install .
-mrz2json <png_or_jpg_or_tiff> [...]
+mrz2json [ -d|--dest-dir <directory> ] <png_or_jpg_or_tiff> [...]
 ```
 
 or
 
 ```
 npm install -g mrz-scanner
-mrz2json <jpg_or_png_or_tiff> [...]
+mrz2json [ -d|--dest-dir <directory> ] <jpg_or_png_or_tiff> [...]
 ```
-On success the result will be stored along the original image in a file suffixed by ".mrz.json"
+On success the result will be stored in a file suffixed by ".mrz.json" along the original image by default.
 
 ## Supported image formats
 
