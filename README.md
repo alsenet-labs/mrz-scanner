@@ -6,7 +6,7 @@ Using [mrz-detection](https://github.com/image-js/mrz-detection) written for Nod
 
 # LICENSE
 ```
-Copyright (c) 2018 ALSENET SA
+Copyright (c) 2018-2019 ALSENET SA
 
 Author(s):
 
