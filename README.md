@@ -25,20 +25,20 @@ Author(s):
 ```
 # Quickstart
 
-## Online demo
+## Web demo
 
-The online demo is at https://alsenet-labs.github.io/mrz-scanner/dist/index.html (nothing is uploaded)
+The web demo is at https://alsenet-labs.github.io/mrz-scanner/dist/index.html (nothing is uploaded)
 
-## From filesystem
+## Web demo from filesystem
 The code is "same-origin friendly". That means it can be run in the browser from the filesystem (no web server required), with eg:
 
-### The prebuilt version
+### Use the prebuilt static version
 ```
 git clone https://github.com/alsenet-labs/mrz-scanner
 xdg-open mrz-scanner/dist/index.html
 ```
 
-### Rebuild and run the static version with
+### Rebuild and run the static version
 ```
 git clone https://github.com/alsenet-labs/mrz-scanner
 cd mrz-scanner
@@ -47,7 +47,7 @@ gulp dist
 xdg-open dist/index.html
 ```
 
-## Using a web server
+## Web demo from web server
 
 You can build the scripts, start a web server and open a browser, with eg:
 ```
@@ -56,7 +56,7 @@ cd mrz-scanner
 npm start
 ```
 
-## Command line
+## Command line tool
 You can also scan documents from the command line using this repository or the latest published npm package.
 On success the result will be stored in a file suffixed by ".mrz.json" along the original image by default.
 
