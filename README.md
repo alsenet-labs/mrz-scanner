@@ -1,8 +1,10 @@
 # mrz-scanner
 
-Detect, ocrize and parse (client or server side, or from command line) the Machine Readable Zone of passports and other documents
+Detect, ocrize and parse MRZ from documents server side.
 
 Using [mrz-detection](https://github.com/image-js/mrz-detection) written for NodeJS by [Daniel Kostro](https://github.com/stropitek) and [Michaël Zasso](https://github.com/targos).
+
+Based on [mrz-scanner](https://github.com/alsenet-labs/mrz-scanner)
 
 # LICENSE
 ```
@@ -24,57 +26,11 @@ Author(s):
 
 ```
 # Quickstart
-
-## Web demo
-
-The web demo is at https://alsenet-labs.github.io/mrz-scanner/dist/index.html (nothing is uploaded)
-
-## Web demo from filesystem
-The code is "same-origin friendly". That means it can be run in the browser from the filesystem (no web server required), with eg:
-
-### Use the prebuilt static version
 ```
-git clone https://github.com/alsenet-labs/mrz-scanner
-xdg-open mrz-scanner/dist/index.html
+yarn add mrz-scan
+OR
+npm i mrz-scan
 ```
-
-### Rebuild and run the static version
-```
-git clone https://github.com/alsenet-labs/mrz-scanner
-cd mrz-scanner
-npm install
-gulp dist
-xdg-open dist/index.html
-```
-
-## Web demo from web server
-
-You can build the scripts, start a web server and open a browser, with eg:
-```
-git clone https://github.com/alsenet-labs/mrz-scanner
-cd mrz-scanner
-npm start
-```
-
-## Command line tool
-You can also scan documents from the command line using this repository or the latest published npm package.
-On success the result will be stored in a file suffixed by ".mrz.json" along the original image by default.
-
-### Using this repository
-```
-git clone https://github.com/alsenet-labs/mrz-scanner
-cd mrz-scanner
-npm install .
-mrz2json [ -d|--dest-dir <directory> ] <png_or_jpg_or_tiff> [...]
-```
-
-### Using the latest published npm package
-
-```
-npm install -g mrz-scanner
-mrz2json [ -d|--dest-dir <directory> ] <jpg_or_png_or_tiff> [...]
-```
-
 ## Supported image formats
 
 Supported image formats

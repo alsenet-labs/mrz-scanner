@@ -1,0 +1,15 @@
+
+[include]
+
+[ignore]
+.*/node_modules/.*
+
+[libs]
+./node_modules/image-js/index.d.ts
+
+[lints]
+
+[options]
+
+[version]
+0.183.1

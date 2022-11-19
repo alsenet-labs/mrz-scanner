@@ -1,0 +1,14 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getType = getType;
+
+function getType(type) {
+  if (!type.includes('/')) {
+    type = `image/${type}`;
+  }
+
+  return type;
+}

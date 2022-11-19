@@ -1,0 +1,9 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+// Unimplemented for Node.js at the moment
+var _default = undefined;
+exports.default = _default;
