@@ -5,5 +5,6 @@ module.exports = {
   minRatio: 0.3,
   maxRatio: 3.0,
   algorithm: 'otsu',
-  randomColors: true
+  randomColors: true,
+  method: 'svm',
 };

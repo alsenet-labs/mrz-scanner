@@ -9,4 +9,4 @@ module.exports = {
   fontName: 'ocrb',
   category: symbols.label,
   ambiguity: true
-}
+};

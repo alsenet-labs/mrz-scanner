@@ -11,31 +11,21 @@ const fingerprintOptions = require('../fingerprintOptions');
 
 module.exports = function getLinesFromImage(image: typeof ImageClass)  {
 
-  var grey = image.grey({ allowGrey: true });
+  const grey = image.grey({ allowGrey: true });
 
   // we should allow to make a level without making a level ...
   let maskOptions = {
     invert: true,
-    algorithm: null,
-    threshold: null,
+    algorithm: roiOptions.algorithm,
   };
-  if (roiOptions.algorithm) {
-    maskOptions.algorithm = roiOptions.algorithm;
-  } else if (roiOptions.greyThreshold) {
-    let greyThreshold = roiOptions.greyThreshold;
-    if (roiOptions.level) {
-      // we simulate the level by changing the threshold
-      greyThreshold = (grey.min[0] + (grey.max[0] - grey.min[0]) * greyThreshold) / grey.maxValue;
-    }
-    maskOptions.threshold = greyThreshold;
-  } else {
-    throw new Error('no algorithm or greyThreshold provided to apply.');
-  }
+  
 
-  var mask = grey.mask(maskOptions);
-  var manager = image.getRoiManager();
+  let mask = grey.mask(maskOptions);
+  let manager = mask.getRoiManager();
   manager.fromMask(mask);
-  var rois = manager.getRois(roiOptions);
+
+  let rois = manager.getRois(roiOptions);
+
   rois = filterRois(rois);
 
   if (rois.length < 60) {
@@ -46,21 +36,24 @@ module.exports = function getLinesFromImage(image: typeof ImageClass)  {
     rois = filterRois(rois);
   }
 
-  var averageSurface = averege(rois.map((elem) => elem.surface));
+  const averageSurface = averege(rois.map((elem) => elem.surface));
 
-  var painted = manager.paint(roiOptions);
+  const painted = manager.paint(roiOptions);
 
   rois.forEach(function (roi) {
-    var small = roi.getMask().scale({
+    const small = roi.getMask().scale({
       width: fingerprintOptions.width,
       height: fingerprintOptions.height
     });
+    
     roi.data = Array.from(small.data);
 
     // draw bounding boxes
-    var mask = roi.getMask();
-    var mbr = mask.minimalBoundingRectangle();
-    roi.mbr = mbr;
+    const mask = roi.getMask();
+    let mbr = mask.minimalBoundingRectangle();
+    
+    // roi.mbr = mbr;
+    
     roi.mbrWidth = getDistance(mbr[0], mbr[1]);
     roi.mbrHeight = getDistance(mbr[1], mbr[2]);
     roi.mbrSurface = roi.mbrWidth * roi.mbrHeight;
@@ -70,11 +63,12 @@ module.exports = function getLinesFromImage(image: typeof ImageClass)  {
       point[0] + mask.position[0],
       point[1] + mask.position[1]
     ]);
+
     painted.paintPolyline(mbr, { color: [255, 0, 0] });
   });
 
   return {
-    lines: groupRoisPerLine(rois, roiOptions),
+    lines: groupRoisPerLine(rois),
     painted,
     mask,
     averageSurface
@@ -117,11 +111,9 @@ function getMask(image, maskOptions) {
 }
 
 function filterRois(rois) {
-  rois = rois.filter((roi) => roi.width !== 1 || roi.height !== 1);
-  var medianSurface = median(rois.map((elem) => elem.surface));
-  rois = rois.filter(
-    (roi) => roi.surface * 3 > medianSurface && roi.surface / 3 < medianSurface
-  );
+  const smallRemoved = rois.filter((roi) => roi.width !== 1 || roi.height !== 1);
+  const medianSurface = median(smallRemoved.map((elem) => elem.surface));
+  const bigRemoved = smallRemoved.filter((roi) => roi.surface * 3 > medianSurface && roi.surface / 3 < medianSurface);
 
-  return rois;
+  return bigRemoved;
 }

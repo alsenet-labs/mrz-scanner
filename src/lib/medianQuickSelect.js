@@ -3,7 +3,7 @@
 const swap = (arr, x, y) => [arr[x], arr[y]] = [arr[y], arr[x]];
 const calcMiddle = (x, y) => ~~((x + y) / 2);
 
-function quickSelect(arr) {
+function quickSelect(arr: Array<number>): number {
   let low = 0;
   let high = arr.length - 1;
   let middle, ll, hh;

@@ -30,11 +30,12 @@
   },
   "homepage": "https://github.com/ProjectINT/mrz-scan",
   "devDependencies": {
-    "eslint": "^6.0.1",
-    "eslint-plugin-flowtype": "^3.11.1",
     "flow-bin": "^0.183.0",
     "flow-remove-types": "^2.193.0",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.0.1",
+    "eslint-plugin-flowtype": "^3.11.1"
   },
   "dependencies": {
     "bson": "^4.7.0",

@@ -1,10 +1,5 @@
-/*
-  Port of the python script by Adrian Rosebrock:
-  https://www.pyimagesearch.com/2015/11/30/detecting-machine-readable-zones-in-passport-images/
- */
-
-'use strict';
-
+// @flow strict
+const ImageClass = require('image-js').Image;
 const radiansDegrees = require('radians-degrees');
 const { Matrix } = require('ml-matrix');
 const {
@@ -18,71 +13,38 @@ const {
 const rectKernel = getRectKernel(9, 5);
 const sqKernel = getRectKernel(19, 19);
 
-function getMrz(image, options) {
-  console.log('options', options);
-  console.log('image', image);
+function getMrz(image: typeof ImageClass) {
   try {
-    return internalGetMrz(image, options);
+    return internalGetMrz(image);
   } catch (e) {
-    return internalGetMrz(image.rotateLeft(), options);
+    return internalGetMrz(image.rotateLeft());
   }
 }
 
-function internalGetMrz(image, options = {}) {
-  const { debug = false, out = {} } = options;
-
+function internalGetMrz(image) {
   const original = image;
-  console.log('original', original);
-
-  const images = out;
-
   const resized = image.resize({ width: 500 });
-  console.log('resized', resized);
-  if (debug) images.resized = resized;
 
   const originalToTreatedRatio = original.width / resized.width;
-  image = resized.grey();
-  if (debug) images.grey = image;
-
-  image = image.gaussianFilter({ radius: 1 });
-  if (debug) images.gaussian = image;
-
-  image = image.blackHat({ kernel: rectKernel });
-  if (debug) images.blackhat = image;
-
-  image = image.scharrFilter({
-    direction: 'x',
-    bitDepth: 32
-  });
-  image = image.abs();
-  image = image.rgba8().grey();
-  if (debug) images.scharr = image;
-
-  image = image.close({
-    kernel: rectKernel
-  });
-  if (debug) images.close = image;
-
-  image = image.mask({
-    algorithm: 'otsu'
-  });
-  if (debug) images.mask = image;
-
-  image = image.close({ kernel: sqKernel });
-  if (debug) images.close2 = image;
-
-  image = image.erode({ iterations: 4 });
-  image = image.dilate({ iterations: 8 });
-  if (debug) images.erode = image;
+  const grey = resized.grey();
+  const resizedGray = grey.gaussianFilter({ radius: 1 });
+  const blackHat = resizedGray.blackHat({ kernel: rectKernel });
+  const scharrFilter = blackHat.scharrFilter({ direction: 'x', bitDepth: 32 });
+  const abs = scharrFilter.abs();
+  const rgba8 = abs.rgba8().grey();
+  const closeRect = rgba8.close({ kernel: rectKernel });
+  const mask = closeRect.mask({ algorithm: 'otsu' });
+  const closeKernel = mask.close({ kernel: sqKernel });
+  const erode = closeKernel.erode({ iterations: 4 });
+  const dilate = erode.dilate({ iterations: 8 });
 
   const roiManager = resized.getRoiManager();
-  roiManager.fromMask(image);
-  let rois = roiManager.getRois({
-    minSurface: 5000
-    // minWidth: 400
-  });
 
+  roiManager.fromMask(dilate);
+  
+  let rois = roiManager.getRois({ minSurface: 5000 });
   let masks = rois.map((roi) => roi.getMask());
+
   rois = rois.map((roi, idx) => {
     const rect = masks[idx].minimalBoundingRectangle();
     let d1 = getDistance(rect[0], rect[1]);
@@ -117,8 +79,8 @@ function internalGetMrz(image, options = {}) {
   });
 
   rois = rois.filter((roi) => checkRatio(roi.meta.ratio));
-
   masks = rois.map((roi) => roi.roi.getMask());
+
   if (rois.length === 0) {
     throw new Error('no roi found');
   }
@@ -127,19 +89,12 @@ function internalGetMrz(image, options = {}) {
     rois.sort((a, b) => b.roi.surface - a.roi.surface);
   }
 
-  if (debug) {
-    const painted = resized.clone().paintMasks(masks, {
-      distinctColor: true,
-      alpha: 50
-    });
-    images.painted = painted;
-  }
-
   let toCrop = original;
 
   const mrzRoi = rois[0];
   let angle = mrzRoi.meta.angle;
   let regionTransform;
+  
   if (Math.abs(angle) > 45) {
     if (angle < 0) {
       toCrop = toCrop.rotateRight();
@@ -151,6 +106,7 @@ function internalGetMrz(image, options = {}) {
       regionTransform = transform(translate(0, toCrop.height), rotateDEG(-90));
     }
   }
+
   let mrzCropOptions;
   if (Math.abs(angle) < 1) {
     mrzCropOptions = {
@@ -225,10 +181,9 @@ function internalGetMrz(image, options = {}) {
     mrzCropOptions.y = newXY.y - mrzCropOptions.height;
   }
 
-  let cropped = toCrop.crop(mrzCropOptions);
-  if (debug) images.crop = cropped;
+  const cropped = toCrop.crop(mrzCropOptions);
 
-  return debug ? { images } : cropped;
+  return cropped;
 }
 
 function getRectKernel(w, h) {

@@ -85,8 +85,8 @@ function predictImages(images, modelName) {
 async function applyModel(name, Xtest) {
   await loadSVM();
   const { descriptors: descriptorsPath, model: modelPath } = getFilePath(name);
-  const bson = new BSON();
-  const { descriptors: Xtrain, kernelOptions } = bson.deserialize(
+  
+  const { descriptors: Xtrain, kernelOptions } = BSON.deserialize(
     await fs.readFile(descriptorsPath)
   );
 

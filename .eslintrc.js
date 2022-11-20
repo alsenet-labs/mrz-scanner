@@ -4,14 +4,13 @@ module.exports = {
       "es6": true,
       'node': true
   },
-  'extends': ['eslint:recommended', 'plugin:flowtype/recommended', "google"],
+  'extends': ['eslint:recommended', 'plugin:flowtype/recommended'],
   'globals': {
       'Atomics': 'readonly',
       'SharedArrayBuffer': 'readonly'
   },
   'parserOptions': {
-    "ecmaVersion": 9,
-    "sourceType": "module",
+    "ecmaVersion": 7,
   },
   'rules': {
       'indent': [
@@ -29,6 +28,6 @@ module.exports = {
       'semi': [
           'error',
           'always'
-      ]
-  }
+      ],
+  },
 };

@@ -9,10 +9,10 @@ try {
   (async () => {
     const buffer = await bufferFromUrl(imgUrl);
     console.log('buffer', buffer);
-    const fromUrl = await mrzScanner(imgUrl, (progress) => {
-      console.log('progress', progress);
-    });
-    console.log('fromUrl', fromUrl);
+    // const fromUrl = await mrzScanner(imgUrl, (progress) => {
+    //   console.log('progress', progress);
+    // });
+    // console.log('fromUrl', fromUrl);
     const fromBuffer = await mrzScanner(buffer);
     console.log('fromBuffer', fromBuffer);
   })();
