@@ -3,14 +3,16 @@
 const ImageClass = require('image-js').Image;
 const getMrz = require('./getMrz');
 const mrzOcr = require('./internal/mrzOcr');
+const bufferFromUrl = require('./lib/bufferFromUrl');
 // $FlowFixMe
 const { DateTime: luxon } = require('luxon');
 
 const parse = require('./mrz-relax');
 
-module.exports = async function detectAndParseMrz(image                   )             {
+module.exports = async function detectAndParseMrz(imgUrl        )             {
   try {
-    const mrz = await getMrz(await ImageClass.load(image));
+    const buffer = await bufferFromUrl(imgUrl);
+    const mrz = await getMrz(await ImageClass.load(buffer));
     const imageDataUrl = mrz.toDataURL();
     const toImage = await ImageClass.load(imageDataUrl);
     var { ocrResult } = await mrzOcr(toImage);
