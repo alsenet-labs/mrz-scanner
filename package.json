@@ -1,10 +1,7 @@
 {
   "name": "mrz-scan",
   "version": "1.0.0",
-  "description": "Detect, ocrize and parse (client or server side or from command line) the Machine Readable Zone of passports and other documents",
-  "bin": {
-    "mrz2json": "src/mrz2json.js"
-  },
+  "description": "Detect, ocrize and parse server side the Machine Readable Zone of passports and other documents",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore .",
     "build": "flow-remove-types src/ -d build/",
@@ -13,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/alsenet-labs/mrz-scanner.git"
+    "url": "https://github.com/ProjectINT/mrz-scan"
   },
   "keywords": [
     "mrz",
@@ -22,8 +19,8 @@
     "ocr",
     "parse"
   ],
-  "copyright": "(C) 2018-2019 Alsenet SA",
-  "author": "luc.deschenaux@freesurf.ch",
+  "copyright": "(C) 2022 Kiev",
+  "author": "admin@somnium.su",
   "license": "AGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/ProjectINT/mrz-scan/issues"
