@@ -1,6 +1,6 @@
 {
-  "name": "mrz-scanner",
-  "version": "1.2.1",
+  "name": "mrz-scan",
+  "version": "1.0.0",
   "description": "Detect, ocrize and parse (client or server side or from command line) the Machine Readable Zone of passports and other documents",
   "bin": {
     "mrz2json": "src/mrz2json.js"
