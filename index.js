@@ -1,1 +1,1 @@
-module.exports = require('./src/detect-and-parse.js');
+module.exports = require('./build/detect-and-parse.js');
