@@ -6,16 +6,17 @@ const fs = require('node:fs/promises');
 const groupBy = require('lodash.groupby');
 const hog = require('hog-features');
 const Kernel = require('ml-kernel');
-const SVMPromise = Promise.resolve(require('libsvm-js/wasm'));
 const range = require('lodash.range');
 const uniq = require('lodash.uniq');
 const BSON = require('bson');
+
+const SVM = require('libsvm-js/asm'); // const SVMPromise = Promise.resolve(require('libsvm-js/asm'));
 const { readImages } = require('./util/readWrite');
 
-let SVM;
 
 async function loadData(dir) {
   const data = await readImages(path.resolve(path.join(__dirname, '..'), dir));
+
   for (let entry of data) {
     let { image } = entry;
     entry.descriptor = extractHOG(image);
@@ -45,6 +46,7 @@ function extractHOG(image) {
   image = image.pad({
     size: 2
   });
+  
   let optionsHog = {
     cellSize: 5,
     blockSize: 2,
@@ -52,6 +54,7 @@ function extractHOG(image) {
     bins: 4,
     norm: 'L2'
   };
+  
   let hogFeatures = hog.extractHOG(image, optionsHog);
   return hogFeatures;
 }
@@ -77,38 +80,9 @@ function getDescriptors(images) {
   return result;
 }
 
-function predictImages(images, modelName) {
+function predictImages(images) {
   const Xtest = getDescriptors(images);
-  return applyModel(modelName, Xtest);
-}
-
-async function applyModel(name, Xtest) {
-  await loadSVM();
-  const { descriptors: descriptorsPath, model: modelPath } = getFilePath(name);
-  
-  const { descriptors: Xtrain, kernelOptions } = BSON.deserialize(
-    await fs.readFile(descriptorsPath)
-  );
-
-  const model = await fs.readFile(modelPath, { encoding: 'utf8' });
-  const classifier = SVM.load(model);
-  const prediction = predict(classifier, Xtrain, Xtest, kernelOptions);
-  return prediction;
-}
-
-async function createModel(letters, name, SVMOptions, kernelOptions) {
-  const { descriptors: descriptorsPath, model: modelPath } = getFilePath(name);
-  const { descriptors, classifier } = await train(
-    letters,
-    SVMOptions,
-    kernelOptions
-  );
-  const bson = new BSON();
-  await fs.writeFile(
-    descriptorsPath,
-    bson.serialize({ descriptors, kernelOptions })
-  );
-  await fs.writeFile(modelPath, classifier.serializeModel());
+  return applyModel(Xtest);
 }
 
 function predict(classifier, Xtrain, Xtest, kernelOptions) {
@@ -119,8 +93,36 @@ function predict(classifier, Xtrain, Xtest, kernelOptions) {
   return classifier.predict(Ktest);
 }
 
+async function applyModel(Xtest) {
+  const { descriptors: descriptorsPath, model: modelPath } = getFilePath();
+  
+  const bson = new BSON();
+  const file = await fs.readFile(descriptorsPath);
+
+  const { descriptors: Xtrain, kernelOptions } = bson.deserialize(file);
+  
+  const model = await fs.readFile(modelPath, { encoding: 'utf8' });
+  const classifier = await SVM.load(model);
+  
+  const prediction = predict(classifier, Xtrain, Xtest, kernelOptions);
+
+  return prediction;
+}
+
+async function createModel(letters, name, SVMOptions, kernelOptions) {
+  const { descriptors: descriptorsPath, model: modelPath } = getFilePath();
+  const { descriptors, classifier } = await train(letters, SVMOptions, kernelOptions);
+  const bson = new BSON();
+
+  try {
+    await fs.writeFile(descriptorsPath, bson.serialize({ descriptors, kernelOptions }));
+    await fs.writeFile(modelPath, classifier.serializeModel());
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 async function train(letters, SVMOptions, kernelOptions) {
-  await loadSVM();
   let SVMOptionsOneClass = {
     type: SVM.SVM_TYPES.ONE_CLASS,
     kernel: SVM.KERNEL_TYPES.PRECOMPUTED,
@@ -139,6 +141,7 @@ async function train(letters, SVMOptions, kernelOptions) {
   const Ytrain = letters.map((s) => s.label);
 
   const uniqLabels = uniq(Ytrain);
+
   if (uniqLabels.length === 1) {
     // eslint-disable-next-line no-console
     console.log('training mode: ONE_CLASS');
@@ -163,17 +166,12 @@ async function train(letters, SVMOptions, kernelOptions) {
   return { classifier, descriptors: Xtrain, oneClass };
 }
 
-function getFilePath(name) {
+function getFilePath() {
   const dataDir = path.join(__dirname, '../models');
-  const fileBase = path.join(dataDir, name);
   return {
-    descriptors: `${fileBase}.svm.descriptors`,
-    model: `${fileBase}.svm.model`
+    descriptors: `${dataDir}/ESC-v2.svm.descriptors`,
+    model: `${dataDir}/ESC-v2.svm.model`
   };
-}
-
-async function loadSVM() {
-  SVM = await SVMPromise;
 }
 
 function getKernel(options) {
@@ -188,5 +186,5 @@ module.exports = {
   predict,
   extractHOG,
   predictImages,
-  loadData
+  loadData,
 };

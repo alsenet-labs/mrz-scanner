@@ -1,14 +1,14 @@
 # regression-polynomial
 
-  [![NPM version][npm-image]][npm-url]
-  [![build status][travis-image]][travis-url]
-  [![npm download][download-image]][download-url]
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![npm download][download-image]][download-url]
 
 Polynomial Regression.
 
 ## Installation
 
-`$ npm install --save ml-regression-polynomial`
+`$ npm i ml-regression-polynomial`
 
 ## Usage
 
@@ -30,7 +30,7 @@ console.log(regression.score(x, y));
 
 ## License
 
-  [MIT](./LICENSE)
+[MIT](./LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/ml-regression-polynomial.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/ml-regression-polynomial

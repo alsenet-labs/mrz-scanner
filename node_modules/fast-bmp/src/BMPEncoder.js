@@ -36,8 +36,7 @@ class BMPEncoder extends IOBuffer {
     this.writePixelArray();
     this.encoded.rewind();
     this.writeBitmapFileHeader(offset);
-    const array = this.encoded.toArray();
-    return Buffer.from(array.buffer, array.byteOffset, array.byteLength);
+    return this.encoded.toArray();
   }
 
   writePixelArray() {

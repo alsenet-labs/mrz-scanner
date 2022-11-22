@@ -1,10 +1,9 @@
 # regression-robust-polynomial
 
-  [![NPM version][npm-image]][npm-url]
-  [![build status][travis-image]][travis-url]
-  [![Test coverage][codecov-image]][codecov-url]
-  [![David deps][david-image]][david-url]
-  [![npm download][download-image]][download-url]
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][codecov-image]][codecov-url]
+[![npm download][download-image]][download-url]
 
 Robust polynomial regression using LMedS.
 
@@ -12,7 +11,7 @@ This code is based on the implementation of [this paper](https://doi.org/10.1007
 
 ## Installation
 
-`$ npm install --save ml-regression-robust-polynomial`
+`$ npm i ml-regression-robust-polynomial`
 
 ## Usage
 
@@ -23,8 +22,8 @@ var size = 30;
 var x = new Array(size);
 var y = new Array(size);
 for (var i = 0; i < size; i++) {
-    x[i] = i;
-    y[i] = 2 * i * i + 4 * i + 5;
+  x[i] = i;
+  y[i] = 2 * i * i + 4 * i + 5;
 }
 y[4] = y[4] * 100;
 y[10] = y[10] * -100;
@@ -38,7 +37,7 @@ regression.predict(3) === 35;
 
 ## License
 
-  [MIT](./LICENSE)
+[MIT](./LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/ml-regression-robust-polynomial.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/ml-regression-robust-polynomial
@@ -46,7 +45,5 @@ regression.predict(3) === 35;
 [travis-url]: https://travis-ci.org/mljs/regression-robust-polynomial
 [codecov-image]: https://img.shields.io/codecov/c/github/mljs/regression-robust-polynomial.svg?style=flat-square
 [codecov-url]: https://codecov.io/gh/mljs/regression-robust-polynomial
-[david-image]: https://img.shields.io/david/mljs/regression-robust-polynomial.svg?style=flat-square
-[david-url]: https://david-dm.org/mljs/regression-robust-polynomial
 [download-image]: https://img.shields.io/npm/dm/ml-regression-robust-polynomial.svg?style=flat-square
 [download-url]: https://npmjs.org/package/ml-regression-robust-polynomial

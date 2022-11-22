@@ -13,6 +13,7 @@ module.exports = function testEncode(data, filename) {
     fs.writeFileSync(path.join(__dirname, 'files', filename), buffer);
   } else {
     const fileData = fs.readFileSync(path.join(__dirname, 'files', filename));
-    expect(fileData).toEqual(buffer);
+    const fileDataUint8 = Uint8Array.from(fileData);
+    expect(buffer).toStrictEqual(fileDataUint8);
   }
 };

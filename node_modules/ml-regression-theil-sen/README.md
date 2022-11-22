@@ -1,14 +1,14 @@
 # regression-theil-sen
 
-  [![NPM version][npm-image]][npm-url]
-  [![build status][travis-image]][travis-url]
-  [![npm download][download-image]][download-url]
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![npm download][download-image]][download-url]
 
 Method for robust fitting a line to a set of points.
 
 ## Installation
 
-`$ npm install --save ml-regression-theil-sen`
+`$ npm i ml-regression-theil-sen`
 
 ## Usage
 
@@ -26,11 +26,12 @@ regression.toString(3) === 'f(x) = x + 1.00';
 ```
 
 ## [API Documentation](https://mljs.github.io/regression-theil-sen/)
-The method it's good explained on [this article](https://en.wikipedia.org/wiki/Theil%E2%80%93Sen_estimator).
+
+The method is well explained on [this article](https://en.wikipedia.org/wiki/Theil%E2%80%93Sen_estimator).
 
 ## License
 
-  [MIT](./LICENSE)
+[MIT](./LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/ml-regression-theil-sen.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/ml-regression-theil-sen

@@ -17,8 +17,6 @@ module.exports = function (data, threshold, accessor) {
   for (const point of diff) {
     zScore.push((0.6745 * point) / mad);
   }
-  //   for (let [idx, x] of zScore.entries()) {
-  //     console.log(zScore[idx], newData[idx], diff[idx], mad);
-  //   }
+
   return data.filter((point, idx) => zScore[idx] < threshold);
 };

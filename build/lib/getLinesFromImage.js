@@ -1,6 +1,6 @@
 //       strict
 'use strict';
-
+// $FlowFixMe
 const ImageClass = require('image-js').Image;
 
 const averege = require('./findAverage.js');
@@ -9,7 +9,56 @@ const groupRoisPerLine = require('./groupRoisPerLine.js');
 const roiOptions = require('../roiOptions');
 const fingerprintOptions = require('../fingerprintOptions');
 
-module.exports = function getLinesFromImage(image                   )  {
+function filterRois(rois) {
+  const smallRemoved = rois.filter((roi) => roi.width !== 1 || roi.height !== 1);
+  const medianSurface = median(smallRemoved.map((elem) => elem.surface));
+  // $FlowFixMe
+  const bigRemoved = smallRemoved.filter((roi) => roi.surface * 3 > medianSurface && roi.surface / 3 < medianSurface);
+
+  return bigRemoved;
+}
+
+function getMask(image, maskOptions) {
+  let mask = new ImageClass(image.width, image.height, { kind: 'BINARY' });
+  const partsY = 1;
+  const partsX = 30;
+  const h = Math.floor(image.height / partsY);
+  const w = Math.floor(image.width / partsX);
+  for (let i = 0; i < partsX; i++) {
+    for (let j = 0; j < partsY; j++) {
+      let x = i * w;
+      let y = j * h;
+      let width = w;
+      let height = h;
+      if (i === partsX - 1) {
+        width += image.width % partsX;
+      }
+      if (j === partsY - 1) {
+        height += image.height % partsY;
+      }
+      const params = {
+        x,
+        y,
+        width,
+        height
+      };
+      const imagePart = image.crop(params).mask(maskOptions);
+      mask.insert(imagePart, { inPlace: true, x: x, y: y });
+    }
+  }
+  return mask;
+}
+
+function getDistance(p1, p2) {
+  return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2);
+}
+
+module.exports = function getLinesFromImage(image                   )   
+                       
+                          
+                             
+                        
+   {
 
   const grey = image.grey({ allowGrey: true });
 
@@ -74,46 +123,3 @@ module.exports = function getLinesFromImage(image                   )  {
     averageSurface
   };
 };
-
-function getDistance(p1, p2) {
-  return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2);
-}
-
-function getMask(image, maskOptions) {
-  let mask = new ImageClass(image.width, image.height, { kind: 'BINARY' });
-  const partsY = 1;
-  const partsX = 30;
-  const h = Math.floor(image.height / partsY);
-  const w = Math.floor(image.width / partsX);
-  for (let i = 0; i < partsX; i++) {
-    for (let j = 0; j < partsY; j++) {
-      let x = i * w;
-      let y = j * h;
-      let width = w;
-      let height = h;
-      if (i === partsX - 1) {
-        width += image.width % partsX;
-      }
-      if (j === partsY - 1) {
-        height += image.height % partsY;
-      }
-      const params = {
-        x,
-        y,
-        width,
-        height
-      };
-      const imagePart = image.crop(params).mask(maskOptions);
-      mask.insert(imagePart, { inPlace: true, x: x, y: y });
-    }
-  }
-  return mask;
-}
-
-function filterRois(rois) {
-  const smallRemoved = rois.filter((roi) => roi.width !== 1 || roi.height !== 1);
-  const medianSurface = median(smallRemoved.map((elem) => elem.surface));
-  const bigRemoved = smallRemoved.filter((roi) => roi.surface * 3 > medianSurface && roi.surface / 3 < medianSurface);
-
-  return bigRemoved;
-}

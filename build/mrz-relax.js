@@ -1,18 +1,14 @@
-//       strict
 'use strict';
 
 var _parse = require('mrz').parse;
 
 
 module.exports = function parse(mrz, modified) {
-  console.log('mrz', mrz);
   var _mrz = mrz.slice(0);
   var result = _parse(_mrz);
-  console.log('result', result);
   var retry;
 
   result.details.forEach(function (d) {
-    console.log('d', d);
     if (!d.valid) {
       if (d.label.search(/date|digit|number/) >= 0) {
         let v0 = _mrz[d.line].substr(d.start, d.end - d.start);

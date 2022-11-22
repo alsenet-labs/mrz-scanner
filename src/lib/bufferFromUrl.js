@@ -1,4 +1,5 @@
 // @flow strict
+// $FlowFixMe
 const https = require('node:https');
 
 module.exports = function bufferFromUrl(link: string): Promise<Buffer> {

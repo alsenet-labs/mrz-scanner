@@ -3,17 +3,12 @@
 
 // we will sort the rois per line
 // we need to regroup per line
-module.exports = function groupRoisPerLine(rois: Array<Object>) {
+module.exports = function groupRoisPerLine(rois: Array<Object>): Array<Object> {
   const roisCopy = rois.slice();
 
   // we take the average height / 5
   let total = roisCopy.reduce((a, b) => (a + b.height), 0);
-  console.log('total', total);
-
-  const allowedShift = Math.round(total / rois.length / 2);
-
-  console.log('allowedShift', allowedShift);
-  console.log('rois.length', rois.length);
+  const allowedShift = Math.round(total / roisCopy.length / 2);
 
   roisCopy.sort(function(a, b) {
     return a.minX - b.minX;
@@ -29,7 +24,7 @@ module.exports = function groupRoisPerLine(rois: Array<Object>) {
     let currentLine;
 
     for (const line of lines) {
-      if (Math.abs(line.y - y) <= allowedShift) {
+      if (Math.abs((line.y || 0) - y) <= allowedShift) {
         currentLine = line;
         break;
       }
@@ -48,7 +43,7 @@ module.exports = function groupRoisPerLine(rois: Array<Object>) {
     currentLine.rois.push(roi);
   }
 
-  lines.sort((a, b) => a.y - b.y);
+  lines.sort((a, b) => Number(a.y) - Number(b.y));
 
   return lines;
 };
