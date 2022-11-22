@@ -28,8 +28,23 @@ Author(s):
 # Quickstart
 ```
 yarn add mrz-scan
-OR
+      OR
 npm i mrz-scan
+
+const mrzScanner = require('mrz-scan');
+const imgUrl = 'https://res.cloudinary.com/dlwgpokai/image/upload/v1668886022/h71rkpghcjhc4jpf49ko.jpg';
+
+const result = await mrzScanner(imgUrl);
+
+result: {
+  number: 'A3536444',
+  validDate: '2031-03-10',
+  birthDate: '2012-12-12',
+  name: 'THURIDUROESPZ',
+  surname: 'AEVARSDOTTIR'
+}
+
+
 ```
 ## Supported image formats
 
