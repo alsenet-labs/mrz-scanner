@@ -34,12 +34,12 @@ yarn add mrz-scan
       OR
 npm i mrz-scan
 ```
+pass [Buffer](https://nodejs.org/api/buffer.html) to mrzScanner
 
 ```js
 const mrzScanner = require('mrz-scan');
-const imgUrl = 'https://res.cloudinary.com/dlwgpokai/image/upload/v1668886022/h71rkpghcjhc4jpf49ko.jpg';
 
-const result = await mrzScanner(imgUrl);
+const result = await mrzScanner(Buffer);
 console.log('result: ', result)
 ```
 ```
