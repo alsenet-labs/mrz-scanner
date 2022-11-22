@@ -1,6 +1,6 @@
 {
   "name": "mrz-scan",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Detect, ocrize and parse server side the Machine Readable Zone of passports and other documents",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore .",
