@@ -26,16 +26,21 @@ Author(s):
 
 ```
 # Quickstart
+
 ```
 yarn add mrz-scan
       OR
 npm i mrz-scan
+```
 
+```js
 const mrzScanner = require('mrz-scan');
 const imgUrl = 'https://res.cloudinary.com/dlwgpokai/image/upload/v1668886022/h71rkpghcjhc4jpf49ko.jpg';
 
 const result = await mrzScanner(imgUrl);
-
+console.log('result: ', result)
+```
+```
 result: {
   number: 'A3536444',
   validDate: '2031-03-10',
@@ -43,8 +48,6 @@ result: {
   name: 'THURIDUROESPZ',
   surname: 'AEVARSDOTTIR'
 }
-
-
 ```
 ## Supported image formats
 
