@@ -6,6 +6,8 @@ Using [mrz-detection](https://github.com/image-js/mrz-detection) written for Nod
 
 Based on [mrz-scanner](https://github.com/alsenet-labs/mrz-scanner)
 
+Refactored by [ProjectINT](https://github.com/ProjectINT) because original package was to big for lambda function
+
 # LICENSE
 ```
 Copyright (c) 2018-2019 ALSENET SA
