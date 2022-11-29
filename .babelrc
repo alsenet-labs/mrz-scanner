@@ -1,3 +1,6 @@
 {
-  "presets": ["flow"]
+  "comments": false,
+  "presets": [
+    "@babel/preset-flow"
+]
 }
