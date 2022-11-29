@@ -1,6 +1,6 @@
 # mrz-scanner
 
-Detect, ocrize and parse MRZ from documents server side.
+Server side mrz scanner.
 
 Using [mrz-detection](https://github.com/image-js/mrz-detection) written for NodeJS by [Daniel Kostro](https://github.com/stropitek) and [Michaël Zasso](https://github.com/targos).
 
@@ -8,49 +8,76 @@ Based on [mrz-scanner](https://github.com/alsenet-labs/mrz-scanner)
 
 Refactored by [ProjectINT](https://github.com/ProjectINT) because original package was to big for lambda function
 
-# LICENSE
-```
-Copyright (c) 2018-2019 ALSENET SA
-
-Author(s):
-
-      Luc Deschenaux <luc.deschenaux@freesurf.ch>
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Affero General Public License for more details.
-
-```
-# Quickstart
+# Install
 
 ```
 yarn add mrz-scan
       OR
 npm i mrz-scan
 ```
-pass [Buffer](https://nodejs.org/api/buffer.html) to mrzScanner
+
+# Get formatted response
 
 ```js
+// @flow
 const mrzScanner = require('mrz-scan');
 
-const result = await mrzScanner(Buffer);
-console.log('result: ', result)
+type Result = ?{ // undefined if errored
+  number: string,
+  validDate: string,
+  birthDate: string,
+  name: string,
+  surname: string,
+};
+
+// Pass [Buffer](https://nodejs.org/api/buffer.html) to mrzScanner
+const result: Result = await mrzScanner(Buffer);
+
 ```
-```
-result: {
-  number: 'A3536444',
-  validDate: '2031-03-10',
-  birthDate: '2012-12-12',
-  name: 'THURIDUROESPZ',
-  surname: 'AEVARSDOTTIR'
+# Or you can get all fields with original === true option
+
+```js
+// @flow
+const mrzScanner = require('mrz-scan');
+
+type Fields = {
+  documentCode: string,
+  issuingState: string,
+  lastName: string,
+  firstName: string,
+  documentNumber: string,
+  documentNumberCheckDigit: string,
+  nationality: string,
+  birthDate: string,
+  birthDateCheckDigit: string,
+  sex: string,
+  expirationDate: string,
+  expirationDateCheckDigit: string,
+  personalNumber: string,
+  personalNumberCheckDigit: string,
+  compositeCheckDigit: string,
 }
+
+type FullResult = ?{ // undefined if errored
+  format: string, // TD1, TD2, TD3
+  details: Array<{
+    label: string,
+    field: $Values<Fields>,
+    value: string,
+    valid: boolean,
+    ranges: Array<[number, number]>,
+    line: number,
+    start: number,
+    end: number,
+  }>,
+  fields: Fields,
+  valid: boolean,
+}
+
+const fullResult: FullResult = const result = await mrzScanner(Buffer, { original: true });
+
 ```
+
 ## Supported image formats
 
 Supported image formats
@@ -59,3 +86,4 @@ The following formats can be loaded by image-js:
 * PNG (8 or 16 bits, color or greyscale, with or without alpha)
 * JPEG
 * TIFF (8 or 16 bits, greyscale)
+
