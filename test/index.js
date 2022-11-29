@@ -10,6 +10,8 @@ try {
     const buffer = await bufferFromUrl(imgUrl);
     const result = await mrzScanner(buffer);
     console.log('result', result);
+    const fullResult = await mrzScanner(buffer, { original: true });
+    console.log('fullResult', fullResult);
   })();
 } catch (e) {
   console.error(e);
