@@ -32,7 +32,7 @@ export function parse(mrz: string[], modified = false): ParseResult {
   for (const d of result.details) {
     if (d.valid) continue;
 
-    const isNumericField = /date|digit|number|check/i.test(d.label);
+    const isNumericField = /date|digit|check/i.test(d.label);
     const isAlphaField = /name|state|nation/i.test(d.label);
     const subs = isNumericField
       ? DIGIT_SUBSTITUTIONS
@@ -42,10 +42,14 @@ export function parse(mrz: string[], modified = false): ParseResult {
 
     if (!subs) continue;
 
-    // Use ranges from mrz v5 Details (always present)
+    // Related ranges contribute to validation, but do not inherit this
+    // field's character class. A check digit can depend on an already-valid
+    // alphanumeric document/personal number; never rewrite those characters
+    // as digits just because the check failed. Their own details handle any
+    // type-specific corrections.
     const ranges =
       d.ranges.length > 0
-        ? d.ranges
+        ? d.ranges.slice(0, 1)
         : [{ line: d.line, start: d.start, end: d.end }];
 
     for (const range of ranges) {
